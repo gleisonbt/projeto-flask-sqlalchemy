@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD de Professores</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <main class="container">
+        <header class="cabecalho">
+            <p class="tag">Projeto de Software</p>
+            <h1>CRUD de Professores</h1>
+            <p>Frontend simples consumindo uma API Flask + SQLAlchemy.</p>
+        </header>
+
+        <section class="card">
+            <h2 id="titulo-formulario">Cadastrar professor</h2>
+
+            <form id="form-professor">
+                <input type="hidden" id="professor-id">
+
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" placeholder="Ex.: Ana Silva" required>
+
+                <label for="email">E-mail</label>
+                <input type="email" id="email" placeholder="Ex.: ana@escola.com" required>
+
+                <label for="disciplina">Disciplina</label>
+                <input type="text" id="disciplina" placeholder="Ex.: Banco de Dados" required>
+
+                <div class="acoes-formulario">
+                    <button type="submit" id="botao-salvar">Salvar</button>
+                    <button type="button" id="botao-cancelar" class="secundario">Cancelar edição</button>
+                </div>
+            </form>
+
+            <p id="mensagem" class="mensagem"></p>
+        </section>
+
+        <section class="card">
+            <div class="topo-lista">
+                <h2>Professores cadastrados</h2>
+                <button id="botao-recarregar" class="secundario">Recarregar</button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>E-mail</th>
+                        <th>Disciplina</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-professores">
+                    <tr>
+                        <td colspan="5">Carregando professores...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="js/professores.js"></script>
+</body>
+</html>
