@@ -6,6 +6,7 @@ from services.listar_professores_service import ListarProfessoresService
 from services.buscar_professor_por_id_service import BuscarProfessorPorIdService
 from services.atualizar_professor_service import AtualizarProfessorService
 from services.deletar_professor_service import DeletarProfessorService
+from services.buscar_professores_por_disciplina_service import BuscarProfessoresPorDisciplinaService
 from models.database import db
 
 professor_controller = Blueprint("professor_controller", __name__)
@@ -32,6 +33,22 @@ def listar_professores():
     service = ListarProfessoresService()
     professores = service.executar()
     return jsonify(professores), 200
+
+
+@professor_controller.get("/professores/por-disciplina")
+def buscar_professores_por_disciplina():
+    try:
+        disciplina = request.args.get("disciplina")
+        service = BuscarProfessoresPorDisciplinaService()
+        professores = service.executar(disciplina)
+        return jsonify(professores), 200
+
+    except ValueError as erro:
+        return jsonify({"erro": str(erro)}), 400
+
+    except SQLAlchemyError:
+        db.session.rollback()
+        return jsonify({"erro": "Erro ao buscar professores por disciplina."}), 500
 
 
 @professor_controller.get("/professores/<int:professor_id>")

@@ -27,6 +27,7 @@ def create_app():
             "rotas": {
                 "listar_professores": "GET /professores",
                 "buscar_professor": "GET /professores/<id>",
+                "buscar_por_disciplina": "GET /professores/por-disciplina?disciplina=Banco de Dados",
                 "criar_professor": "POST /professores",
                 "atualizar_professor": "PUT /professores/<id>",
                 "deletar_professor": "DELETE /professores/<id>",

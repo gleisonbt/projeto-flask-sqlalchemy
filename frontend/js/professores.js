@@ -11,6 +11,9 @@ const tituloFormulario = document.querySelector("#titulo-formulario");
 const botaoSalvar = document.querySelector("#botao-salvar");
 const botaoCancelar = document.querySelector("#botao-cancelar");
 const botaoRecarregar = document.querySelector("#botao-recarregar");
+const filtroDisciplina = document.querySelector("#filtro-disciplina");
+const botaoFiltrarDisciplina = document.querySelector("#botao-filtrar-disciplina");
+const botaoLimparFiltro = document.querySelector("#botao-limpar-filtro");
 
 function mostrarMensagem(texto, tipo) {
     mensagem.textContent = texto;
@@ -26,43 +29,76 @@ function limparFormulario() {
     botaoSalvar.textContent = "Salvar";
 }
 
+function renderizarProfessores(professores) {
+    tabelaProfessores.innerHTML = "";
+
+    if (professores.length === 0) {
+        tabelaProfessores.innerHTML = `
+            <tr>
+                <td colspan="5">Nenhum professor encontrado.</td>
+            </tr>
+        `;
+        return;
+    }
+
+    professores.forEach((professor) => {
+        const linha = document.createElement("tr");
+
+        linha.innerHTML = `
+            <td data-label="ID">${professor.id}</td>
+            <td data-label="Nome">${professor.nome}</td>
+            <td data-label="E-mail">${professor.email}</td>
+            <td data-label="Disciplina">${professor.disciplina}</td>
+            <td data-label="Ações">
+                <div class="acoes-tabela">
+                    <button onclick='prepararEdicao(${JSON.stringify(professor)})'>Editar</button>
+                    <button class="perigo" onclick="deletarProfessor(${professor.id})">Excluir</button>
+                </div>
+            </td>
+        `;
+
+        tabelaProfessores.appendChild(linha);
+    });
+}
+
 async function listarProfessores() {
     try {
         const resposta = await fetch(API_URL);
         const professores = await resposta.json();
-
-        tabelaProfessores.innerHTML = "";
-
-        if (professores.length === 0) {
-            tabelaProfessores.innerHTML = `
-                <tr>
-                    <td colspan="5">Nenhum professor cadastrado.</td>
-                </tr>
-            `;
-            return;
-        }
-
-        professores.forEach((professor) => {
-            const linha = document.createElement("tr");
-
-            linha.innerHTML = `
-                <td data-label="ID">${professor.id}</td>
-                <td data-label="Nome">${professor.nome}</td>
-                <td data-label="E-mail">${professor.email}</td>
-                <td data-label="Disciplina">${professor.disciplina}</td>
-                <td data-label="Ações">
-                    <div class="acoes-tabela">
-                        <button onclick='prepararEdicao(${JSON.stringify(professor)})'>Editar</button>
-                        <button class="perigo" onclick="deletarProfessor(${professor.id})">Excluir</button>
-                    </div>
-                </td>
-            `;
-
-            tabelaProfessores.appendChild(linha);
-        });
+        renderizarProfessores(professores);
     } catch (erro) {
         mostrarMensagem("Não foi possível carregar os professores. Verifique se a API está rodando.", "erro");
     }
+}
+
+async function buscarProfessoresPorDisciplina() {
+    const disciplina = filtroDisciplina.value.trim();
+
+    if (!disciplina) {
+        mostrarMensagem("Informe uma disciplina para buscar.", "erro");
+        return;
+    }
+
+    try {
+        const resposta = await fetch(`${API_URL}/por-disciplina?disciplina=${encodeURIComponent(disciplina)}`);
+        const dados = await resposta.json();
+
+        if (!resposta.ok) {
+            mostrarMensagem(dados.erro || "Erro ao buscar professores por disciplina.", "erro");
+            return;
+        }
+
+        renderizarProfessores(dados);
+        mostrarMensagem(`Filtro aplicado: ${disciplina}.`, "sucesso");
+    } catch (erro) {
+        mostrarMensagem("Erro de conexão com a API.", "erro");
+    }
+}
+
+function limparFiltroDisciplina() {
+    filtroDisciplina.value = "";
+    mostrarMensagem("Filtro removido. Listando todos os professores.", "sucesso");
+    listarProfessores();
 }
 
 function prepararEdicao(professor) {
@@ -139,5 +175,7 @@ async function deletarProfessor(id) {
 formProfessor.addEventListener("submit", salvarProfessor);
 botaoCancelar.addEventListener("click", limparFormulario);
 botaoRecarregar.addEventListener("click", listarProfessores);
+botaoFiltrarDisciplina.addEventListener("click", buscarProfessoresPorDisciplina);
+botaoLimparFiltro.addEventListener("click", limparFiltroDisciplina);
 
 listarProfessores();

@@ -78,9 +78,38 @@ DATABASE_URL=mysql+pymysql://root:sua_senha@localhost:3306/escola_db
 |---|---|---|
 | GET | `/professores` | Lista todos os professores |
 | GET | `/professores/<id>` | Busca um professor pelo id |
+| GET | `/professores/por-disciplina?disciplina=Banco de Dados` | Busca professores ativos por disciplina usando Repository |
 | POST | `/professores` | Cadastra um professor |
 | PUT | `/professores/<id>` | Atualiza um professor |
 | DELETE | `/professores/<id>` | Remove um professor |
+
+## Caso de uso com Repository
+
+Este projeto também possui um exemplo de consulta que não é CRUD básico:
+
+```text
+buscar_professores_por_disciplina
+```
+
+Fluxo do caso de uso:
+
+```text
+Controller -> Service -> Repository -> CALL sp_professores_por_disciplina -> MySQL
+```
+
+Rota:
+
+```text
+GET /professores/por-disciplina?disciplina=Banco de Dados
+```
+
+No MySQL, a procedure está no arquivo:
+
+```text
+backend/database/create_database.sql
+```
+
+Para facilitar testes locais com SQLite, o Repository possui uma consulta equivalente usando SQLAlchemy.
 
 ## Exemplo de JSON para cadastrar
 

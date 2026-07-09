@@ -8,7 +8,8 @@ Este repositório apresenta um exemplo simples de CRUD completo com:
 - Controllers para receber requisições HTTP;
 - Services organizados por caso de uso;
 - Frontend simples em HTML, CSS e JavaScript consumindo a API;
-- Script SQL para criação do banco MySQL.
+- Script SQL para criação do banco MySQL;
+- Exemplo de caso de uso com Repository chamando stored procedure.
 
 ## Estrutura do projeto
 
@@ -47,6 +48,12 @@ CRUD de Professores:
 - Buscar professor por id;
 - Atualizar professor;
 - Excluir professor.
+
+Caso de uso com Repository:
+
+- Buscar professores ativos por disciplina usando `ProfessorRepository`;
+- No MySQL, o Repository chama a procedure `sp_professores_por_disciplina`;
+- Controller e Service não chamam procedure diretamente.
 
 ## Como executar o backend
 
@@ -126,6 +133,7 @@ http://127.0.0.1:5500
 |---|---|---|
 | GET | `/professores` | Lista todos os professores |
 | GET | `/professores/<id>` | Busca um professor pelo id |
+| GET | `/professores/por-disciplina?disciplina=Banco de Dados` | Busca professores ativos por disciplina usando Repository |
 | POST | `/professores` | Cadastra um professor |
 | PUT | `/professores/<id>` | Atualiza um professor |
 | DELETE | `/professores/<id>` | Remove um professor |

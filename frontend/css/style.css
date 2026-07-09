@@ -80,13 +80,19 @@ button.perigo {
 }
 
 .acoes-formulario,
-.topo-lista {
+.topo-lista,
+.linha-filtro {
     display: flex;
     gap: 12px;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
     margin-top: 12px;
+}
+
+.linha-filtro input {
+    flex: 1;
+    min-width: 240px;
 }
 
 .mensagem {

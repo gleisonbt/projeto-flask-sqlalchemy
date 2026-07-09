@@ -8,13 +8,14 @@ class Professor(db.Model):
     nome = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     disciplina = db.Column(db.String(100), nullable=False)
+    ativo = db.Column(db.Boolean, nullable=False, default=True)
 
     def salvar(self):
         """CREATE: salva um novo professor no banco."""
         db.session.add(self)
         db.session.commit()
 
-    def atualizar(self, nome=None, email=None, disciplina=None):
+    def atualizar(self, nome=None, email=None, disciplina=None, ativo=None):
         """UPDATE: altera apenas os campos informados."""
         if nome is not None:
             self.nome = nome
@@ -22,6 +23,8 @@ class Professor(db.Model):
             self.email = email
         if disciplina is not None:
             self.disciplina = disciplina
+        if ativo is not None:
+            self.ativo = ativo
 
         db.session.commit()
 
@@ -52,4 +55,5 @@ class Professor(db.Model):
             "nome": self.nome,
             "email": self.email,
             "disciplina": self.disciplina,
+            "ativo": self.ativo,
         }
